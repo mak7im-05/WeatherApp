@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS Users
+(
+    id       SERIAL PRIMARY KEY,
+    login    VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Locations
+(
+    id        SERIAL PRIMARY KEY,
+    name      VARCHAR(255)   NOT NULL,
+    userId    INTEGER        NOT NULL,
+    latitude  DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(10, 8) NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users (ID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Sessions
+(
+    ID        UUID PRIMARY KEY,
+    UserId    INTEGER   NOT NULL,
+    ExpiresAt TIMESTAMP NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users (ID) ON DELETE CASCADE
+);
