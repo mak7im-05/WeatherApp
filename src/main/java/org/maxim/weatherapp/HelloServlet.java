@@ -1,6 +1,9 @@
 package org.maxim.weatherapp;
 
 import java.io.*;
+import java.util.Collection;
+import java.util.Collections;
+
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import org.flywaydb.core.Flyway;
@@ -31,5 +34,6 @@ public class HelloServlet extends HttpServlet {
     }
 
     public void destroy() {
+//        Collections collections = new Collection<Integer>();
     }
 }

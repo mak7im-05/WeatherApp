@@ -1,12 +1,11 @@
 package org.maxim.weatherapp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class User {
     private int id;
     private String login;
     private String password;
+
 }
