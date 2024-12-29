@@ -1,0 +1,36 @@
+body {
+    background-color: #f0f8ff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.login-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+.login-container img {
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.cloud-image {
+    width: 100px;
+    margin: 0 auto;
+}
+.registration-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.registration-image {
+    width: 100px;
+    margin-bottom: 20px;
+}
