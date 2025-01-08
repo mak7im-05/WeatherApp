@@ -1,4 +1,4 @@
-package org.maxim.weatherapp.dto;
+package org.maxim.weatherapp.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

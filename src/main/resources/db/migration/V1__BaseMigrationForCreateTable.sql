@@ -17,8 +17,9 @@ CREATE TABLE IF NOT EXISTS Locations
 
 CREATE TABLE IF NOT EXISTS Sessions
 (
-    id        VARCHAR(255) PRIMARY KEY,
-    user_id    INTEGER   NOT NULL,
-    expiresAt TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    id        uuid PRIMARY KEY,
+    user_id   INTEGER   NOT NULL,
+    expiresAt TIMESTAMP WITH TIME ZONE NOT NULL,
     FOREIGN KEY (User_id) REFERENCES Users (id) ON DELETE CASCADE
 );
+

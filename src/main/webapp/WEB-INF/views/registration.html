@@ -24,7 +24,7 @@
 
     <div class="mb-3">
       <label for="repeatPassword" class="form-label">Repeat password</label>
-      <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat password" name="repeatPassword" required>
+      <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat password" th:field="*{confirmPassword}" required>
     </div>
 
     <button type="submit" class="btn btn-primary w-100">Sign Up</button>

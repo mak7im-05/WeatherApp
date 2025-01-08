@@ -1,9 +1,10 @@
 package org.maxim.weatherapp.controllers;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.maxim.weatherapp.dto.User;
+import lombok.RequiredArgsConstructor;
+import org.maxim.weatherapp.dto.UserServiceDTO;
+import org.maxim.weatherapp.services.SessionService;
 import org.maxim.weatherapp.services.UserService;
 import org.maxim.weatherapp.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +12,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 public class LoginController {
+
+    private final SessionService sessionService;
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public LoginController(SessionService sessionService, UserService userService) {
+        this.sessionService = sessionService;
+        this.userService = userService;
+    }
 
     @GetMapping("/login")
-    public String showLoginPage(Model model) {
-        model.addAttribute("user", new User());
+    public String showLoginPage(@ModelAttribute("user") UserServiceDTO user) {
         return "login";
     }
 
     @PostMapping("/login")
-    public String handleLogin(@ModelAttribute("user") User user, Model model, HttpServletResponse response) {
+    public String handleLogin(@ModelAttribute("user") UserServiceDTO user,
+                              Model model, HttpServletResponse response) {
         try {
-            String sessionId = userService.loginUser(user);
+            int userId = userService.authenticateUser(user);
+            UUID sessionId = sessionService.create(userId);
             Cookie cookie = CookieUtils.createCookieWithSessionId(sessionId);
             response.addCookie(cookie);
             return "redirect:/";

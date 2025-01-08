@@ -1,27 +1,38 @@
 package org.maxim.weatherapp.services;
 
-import org.maxim.weatherapp.dao.UserDao;
-import org.maxim.weatherapp.dto.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import org.maxim.weatherapp.dto.UserServiceDTO;
+import org.maxim.weatherapp.entities.User;
+import org.maxim.weatherapp.mapper.IUserEntityMapper;
+import org.maxim.weatherapp.repositories.UserRepository;
+import org.maxim.weatherapp.utils.PasswordEncoderUtil;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
-    private final UserDao userDao;
 
-    public UserService() {
+    private final UserRepository userRepository;
+    private final IUserEntityMapper userEntityMapper;
 
-        this.userDao = new UserDao();
+    @Transactional
+    public void registerUser(UserServiceDTO userData) {
+        String encryptedPassword = PasswordEncoderUtil.encryptPassword(userData.getPassword());
+        User user = userEntityMapper.mapTo(userData);
+        user.setPassword(encryptedPassword);
+        userRepository.save(user);
     }
 
-    public void registerUser(User user) {
-        if(userDao.getByUserLogin(user.getLogin())) {
-            throw new IllegalArgumentException("User already exists");
+    public int authenticateUser(UserServiceDTO user) {
+        Optional<User> foundUser = userRepository.findByLogin(user.getLogin());
+        if (foundUser.isPresent() && PasswordEncoderUtil.isPasswordHashMatch(user, foundUser)) {
+            return foundUser.get().getId();
+        } else {
+            throw new IllegalArgumentException("Invalid login or password");
         }
-        userDao.add(user);
-    }
-
-    public String loginUser(User user) {
-        return "123";
     }
 }

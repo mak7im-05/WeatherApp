@@ -2,7 +2,11 @@ package org.maxim.weatherapp.utils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.experimental.UtilityClass;
 
+import java.util.UUID;
+
+@UtilityClass
 public class CookieUtils {
     public static String findCookieByName(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
@@ -17,8 +21,8 @@ public class CookieUtils {
         return sessionId;
     }
 
-    public static Cookie createCookieWithSessionId(String sessionId) {
-        Cookie cookie = new Cookie("sessionId", sessionId);
+    public static Cookie createCookieWithSessionId(UUID sessionId) {
+        Cookie cookie = new Cookie("sessionId", sessionId.toString());
         cookie.setMaxAge(60 * 60 * 24);
         return cookie;
     }
