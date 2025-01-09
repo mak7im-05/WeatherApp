@@ -2,6 +2,7 @@ package org.maxim.weatherapp.controllers;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.maxim.weatherapp.dto.UserServiceDTO;
 import org.maxim.weatherapp.services.SessionService;
@@ -10,6 +11,7 @@ import org.maxim.weatherapp.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -32,8 +34,12 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(@ModelAttribute("user") UserServiceDTO user,
+    public String handleLogin(@ModelAttribute("user") @Valid UserServiceDTO user,
+                              BindingResult bindingResult,
                               Model model, HttpServletResponse response) {
+        if (bindingResult.hasErrors()) {
+            return "login";
+        }
         try {
             int userId = userService.authenticateUser(user);
             UUID sessionId = sessionService.create(userId);

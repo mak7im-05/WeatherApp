@@ -13,6 +13,6 @@ public class PasswordEncoderUtil {
     }
 
     public static boolean isPasswordHashMatch(UserServiceDTO user, Optional<User> foundUser) {
-        return BCrypt.checkpw(user.getPassword(), foundUser.get().getPassword());
+        return BCrypt.checkpw(user.password(), foundUser.get().getPassword());
     }
 }

@@ -21,14 +21,14 @@ public class UserService {
 
     @Transactional
     public void registerUser(UserServiceDTO userData) {
-        String encryptedPassword = PasswordEncoderUtil.encryptPassword(userData.getPassword());
+        String encryptedPassword = PasswordEncoderUtil.encryptPassword(userData.password());
         User user = userEntityMapper.mapTo(userData);
         user.setPassword(encryptedPassword);
         userRepository.save(user);
     }
 
     public int authenticateUser(UserServiceDTO user) {
-        Optional<User> foundUser = userRepository.findByLogin(user.getLogin());
+        Optional<User> foundUser = userRepository.findByLogin(user.login());
         if (foundUser.isPresent() && PasswordEncoderUtil.isPasswordHashMatch(user, foundUser)) {
             return foundUser.get().getId();
         } else {

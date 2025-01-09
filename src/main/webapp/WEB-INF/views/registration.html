@@ -13,18 +13,27 @@
   <h2>Sign Up</h2>
   <form th:method="POST" th:action="@{/registration}" th:object="${user}">
     <div class="mb-3">
-      <label for="login" class="form-label">Username</label>
+      <label for="login" class="form-label">Login</label>
       <input type="text" class="form-control" id="login" placeholder="Enter login" th:field="*{login}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('login')}">
+        <small th:text="${#fields.errors('login')}"></small>
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="password" class="form-label">Password</label>
       <input type="password" class="form-control" id="password" placeholder="Enter password" th:field="*{password}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('password')}">
+        <small th:text="${#fields.errors('password')}"></small>
+      </div>
     </div>
 
     <div class="mb-3">
       <label for="repeatPassword" class="form-label">Repeat password</label>
       <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat password" th:field="*{confirmPassword}" required>
+      <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}">
+        <small th:text="${#fields.errors('confirmPassword')}"></small>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary w-100">Sign Up</button>

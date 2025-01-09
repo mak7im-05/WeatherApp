@@ -15,12 +15,12 @@ public class SpringMvcDispatcherServletInitializer extends AbstractAnnotationCon
         return new Class[] {SpringConfig.class};
     }
 
-    @Override
-    protected Filter[] getServletFilters () {
-        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy();
-        filterProxy.setTargetBeanName("AuthenticationFilter");
-        return new Filter[]{filterProxy};
-    }
+//    @Override
+//    protected Filter[] getServletFilters () {
+//        DelegatingFilterProxy filterProxy = new DelegatingFilterProxy();
+//        filterProxy.setTargetBeanName("AuthenticationFilter");
+//        return new Filter[]{filterProxy};
+//    }
 
     @Override
     protected String[] getServletMappings() {

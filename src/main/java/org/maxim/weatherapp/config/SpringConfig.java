@@ -1,5 +1,6 @@
 package org.maxim.weatherapp.config;
 
+import org.maxim.weatherapp.interceptor.AuthenticationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +15,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
@@ -34,14 +32,14 @@ import java.util.Properties;
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
-
     private final Environment environment;
-
+    private final AuthenticationInterceptor authenticationInterceptor;
 
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext, Environment environment) {
+    public SpringConfig(ApplicationContext applicationContext, Environment environment, AuthenticationInterceptor authenticationInterceptor) {
         this.applicationContext = applicationContext;
         this.environment = environment;
+        this.authenticationInterceptor = authenticationInterceptor;
     }
 
     @Bean
@@ -115,5 +113,12 @@ public class SpringConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authenticationInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login", "/registration", "/static/**", "/error", "/resources/**");
     }
 }
