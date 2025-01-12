@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Getter
 @Setter
@@ -22,10 +23,9 @@ public class User {
     @Column(name = "id")
     private int id;
 
-
     @NotEmpty(message = "login should not be empty")
     @Email(message = "email should be valid")
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
     @NotEmpty(message = "password should not be empty")

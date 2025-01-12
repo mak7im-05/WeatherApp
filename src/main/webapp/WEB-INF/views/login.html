@@ -12,6 +12,11 @@
     <img th:src="@{/resources/images/CloudAndSun.png}" alt="Cloud" class="cloud-image">
     <h2>Sign In</h2>
     <form th:method="POST" th:action="@{/login}" th:object="${user}">
+
+        <div class="mb-3 error-message" th:if="${error}" >
+            <p th:text="${error}"></p>
+        </div>
+
         <div class="mb-3">
             <label for="login" class="form-label">Login</label>
             <input type="text" class="form-control" id="login" placeholder="Enter login" th:field="*{login}" required>

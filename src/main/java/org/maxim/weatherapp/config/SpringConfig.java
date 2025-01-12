@@ -25,7 +25,7 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan("org.maxim.weatherapp")
-@PropertySource("classpath:hibernate.properties")
+@PropertySource("classpath:${spring.profiles.active}.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("org.maxim.weatherapp.repositories")
 @EnableWebMvc
@@ -73,6 +73,8 @@ public class SpringConfig implements WebMvcConfigurer {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
+        System.out.println(environment.getProperty("hibernate.driver_class"));
+
         dataSource.setDriverClassName(environment.getRequiredProperty("hibernate.driver_class"));
         dataSource.setUrl(environment.getRequiredProperty("hibernate.connection.url"));
         dataSource.setUsername(environment.getRequiredProperty("hibernate.connection.username"));
@@ -85,6 +87,7 @@ public class SpringConfig implements WebMvcConfigurer {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
         properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
 
         return properties;
     }

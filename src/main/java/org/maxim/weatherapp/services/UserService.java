@@ -6,6 +6,7 @@ import org.maxim.weatherapp.entities.User;
 import org.maxim.weatherapp.mapper.IUserEntityMapper;
 import org.maxim.weatherapp.repositories.UserRepository;
 import org.maxim.weatherapp.utils.PasswordEncoderUtil;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,11 @@ public class UserService {
         String encryptedPassword = PasswordEncoderUtil.encryptPassword(userData.password());
         User user = userEntityMapper.mapTo(userData);
         user.setPassword(encryptedPassword);
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("this user has already been registered or something went wrong...");
+        }
     }
 
     public int authenticateUser(UserServiceDTO user) {

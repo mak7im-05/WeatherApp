@@ -1,0 +1,6 @@
+GET https://api.openweathermap.org/data/2.5/weather?lat=59.8944&lon=30.2642&appid=fcaba8fd655f67eb30b62940d5658bc4
+Accept: application/json
+
+###
+GET https://api.openweathermap.org/data/2.5/weather?q=Saint Petersburg&appid=fcaba8fd655f67eb30b62940d5658bc4&units=metric
+Accept: application/json

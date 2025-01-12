@@ -1,7 +1,6 @@
 package org.maxim.weatherapp.services;
 
 import org.maxim.weatherapp.entities.Session;
-import org.maxim.weatherapp.entities.User;
 import org.maxim.weatherapp.repositories.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,13 @@ public class SessionService {
 
     public UUID create(int userId) {
         UUID sessionUuid = UUID.randomUUID();
-        Session newSession = new Session(sessionUuid, userId, LocalDateTime.now().plusSeconds(40));
+        Session newSession = new Session(sessionUuid, userId, LocalDateTime.now().plusSeconds(60*60*24));
+
         sessionRepository.save(newSession);
         return sessionUuid;
     }
 
     public boolean isSessionActive(String sessionId) {
-
         UUID sessionUuid = UUID.fromString(sessionId);
         Optional<Session> session = sessionRepository.findById(sessionUuid);
         if (session.isEmpty()) return false;
