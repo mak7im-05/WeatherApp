@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.maxim.weatherapp.dto.UserServiceDTO;
 import org.maxim.weatherapp.entities.User;
 import org.maxim.weatherapp.mapper.IUserEntityMapper;
-import org.maxim.weatherapp.repositories.UserRepository;
+import org.maxim.weatherapp.repositories.IUserRepository;
 import org.maxim.weatherapp.utils.PasswordEncoderUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
     private final IUserEntityMapper userEntityMapper;
 
     @Transactional

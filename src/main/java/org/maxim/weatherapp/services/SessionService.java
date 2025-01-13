@@ -1,7 +1,7 @@
 package org.maxim.weatherapp.services;
 
 import org.maxim.weatherapp.entities.Session;
-import org.maxim.weatherapp.repositories.SessionRepository;
+import org.maxim.weatherapp.repositories.ISessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,24 +12,24 @@ import java.util.UUID;
 @Service
 public class SessionService {
 
-    private final SessionRepository sessionRepository;
+    private final ISessionRepository ISessionRepository;
 
     @Autowired
-    public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
+    public SessionService(ISessionRepository ISessionRepository) {
+        this.ISessionRepository = ISessionRepository;
     }
 
     public UUID create(int userId) {
         UUID sessionUuid = UUID.randomUUID();
         Session newSession = new Session(sessionUuid, userId, LocalDateTime.now().plusSeconds(60*60*24));
 
-        sessionRepository.save(newSession);
+        ISessionRepository.save(newSession);
         return sessionUuid;
     }
 
     public boolean isSessionActive(String sessionId) {
         UUID sessionUuid = UUID.fromString(sessionId);
-        Optional<Session> session = sessionRepository.findById(sessionUuid);
+        Optional<Session> session = ISessionRepository.findById(sessionUuid);
         if (session.isEmpty()) return false;
 
         return checkSessionTime(session);
@@ -42,6 +42,11 @@ public class SessionService {
 
     public void deleteSessionById(String sessionId) {
         UUID sessionUuid = UUID.fromString(sessionId);
-        sessionRepository.deleteById(sessionUuid);
+        ISessionRepository.deleteById(sessionUuid);
+    }
+
+    public int getUserIdBySessionId(String sessionId) {
+        UUID sessionUuid = UUID.fromString(sessionId);
+        return ISessionRepository.findById(sessionUuid).get().getUserId();
     }
 }

@@ -23,16 +23,19 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String sessionId = CookieUtils.findCookieByName(request, "sessionId");
-
         if (sessionId == null || sessionId.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return false;
-        } else if (!sessionService.isSessionActive(sessionId)) {
-            sessionService.deleteSessionById(sessionId);
             response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
 
+        int userId = sessionService.getUserIdBySessionId(sessionId);
+
+        if (!sessionService.isSessionActive(sessionId)) {
+            sessionService.deleteSessionById(sessionId);
+            response.sendRedirect(request.getContextPath() + "/login");
+            return false;
+        }
+        request.setAttribute("userId", userId);
         return true;
     }
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record WeatherResponseDto(
+public record   WeatherResponseDto(
         @JsonProperty("name") String cityName,
         @JsonProperty("coord") Coord coord,
         @JsonProperty("weather") List<Weather> weather,

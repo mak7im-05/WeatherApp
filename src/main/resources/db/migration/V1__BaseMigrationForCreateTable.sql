@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Locations
 (
     id        SERIAL PRIMARY KEY,
     name      VARCHAR(255)   NOT NULL,
-    user_id    INTEGER        NOT NULL,
+    user_id   INTEGER        NOT NULL,
     latitude  DECIMAL(10, 8) NOT NULL,
     longitude DECIMAL(10, 8) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE

@@ -5,8 +5,8 @@ import org.maxim.weatherapp.config.SpringConfig;
 import org.maxim.weatherapp.dto.UserServiceDTO;
 import org.maxim.weatherapp.entities.Session;
 import org.maxim.weatherapp.entities.User;
-import org.maxim.weatherapp.repositories.SessionRepository;
-import org.maxim.weatherapp.repositories.UserRepository;
+import org.maxim.weatherapp.repositories.ISessionRepository;
+import org.maxim.weatherapp.repositories.IUserRepository;
 import org.maxim.weatherapp.services.SessionService;
 import org.maxim.weatherapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,9 @@ public class UserAndSessionServiceIntegrationTest {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
     @Autowired
-    private SessionRepository sessionRepository;
+    private ISessionRepository ISessionRepository;
     @Autowired
     private SessionService sessionService;
 
@@ -75,9 +75,9 @@ public class UserAndSessionServiceIntegrationTest {
         int userId = userService.authenticateUser(user);
 
         UUID sessionUuid = sessionService.create(userId);
-        Optional<Session> session = sessionRepository.findById(sessionUuid);
+        Optional<Session> session = ISessionRepository.findById(sessionUuid);
         session.ifPresent(a -> a.setExpiresAt(LocalDateTime.now().minusSeconds(60*60*24)));
-        session.ifPresent(a -> sessionRepository.save(a));
+        session.ifPresent(a -> ISessionRepository.save(a));
 
         boolean sessionActive = sessionService.isSessionActive(sessionUuid.toString());
         assertFalse(sessionActive);
