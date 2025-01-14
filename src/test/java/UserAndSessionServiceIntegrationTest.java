@@ -1,16 +1,15 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.maxim.weatherapp.config.SpringConfig;
-import org.maxim.weatherapp.dto.UserServiceDTO;
-import org.maxim.weatherapp.entities.Session;
-import org.maxim.weatherapp.entities.User;
-import org.maxim.weatherapp.repositories.ISessionRepository;
-import org.maxim.weatherapp.repositories.IUserRepository;
-import org.maxim.weatherapp.services.SessionService;
-import org.maxim.weatherapp.services.UserService;
+import org.maxim.weatherApp.config.SpringConfig;
+import org.maxim.weatherApp.dto.UserServiceDTO;
+import org.maxim.weatherApp.entities.Session;
+import org.maxim.weatherApp.entities.User;
+import org.maxim.weatherApp.repositories.SessionRepository;
+import org.maxim.weatherApp.repositories.UserRepository;
+import org.maxim.weatherApp.services.SessionService;
+import org.maxim.weatherApp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -31,9 +30,9 @@ public class UserAndSessionServiceIntegrationTest {
     @Autowired
     private UserService userService;
     @Autowired
-    private IUserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private ISessionRepository ISessionRepository;
+    private SessionRepository ISessionRepository;
     @Autowired
     private SessionService sessionService;
 
@@ -65,7 +64,7 @@ public class UserAndSessionServiceIntegrationTest {
         System.out.println(savedUser);
         assertTrue(savedUser.isPresent());
         assertEquals(user.login(), savedUser.get().getLogin());
-        assertThrows(DataIntegrityViolationException.class, () -> userService.registerUser(user));
+        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(user));
     }
 
     @Test
@@ -76,7 +75,7 @@ public class UserAndSessionServiceIntegrationTest {
 
         UUID sessionUuid = sessionService.create(userId);
         Optional<Session> session = ISessionRepository.findById(sessionUuid);
-        session.ifPresent(a -> a.setExpiresAt(LocalDateTime.now().minusSeconds(60*60*24)));
+        session.ifPresent(a -> a.setExpiresAt(LocalDateTime.now().minusSeconds(60 * 60 * 24)));
         session.ifPresent(a -> ISessionRepository.save(a));
 
         boolean sessionActive = sessionService.isSessionActive(sessionUuid.toString());
