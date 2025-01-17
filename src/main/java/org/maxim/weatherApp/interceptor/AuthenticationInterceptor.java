@@ -28,13 +28,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        int userId = sessionService.getUserIdBySessionId(sessionId);
-
         if (!sessionService.isSessionActive(sessionId)) {
             sessionService.deleteSessionById(sessionId);
             response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
+        int userId = sessionService.getUserIdBySessionId(sessionId);
         request.setAttribute("userId", userId);
         return true;
     }

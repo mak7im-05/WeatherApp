@@ -15,7 +15,6 @@ public class SpringMvcDispatcherServletInitializer extends AbstractAnnotationCon
     }
 
     @Override
-    @NonNull
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }

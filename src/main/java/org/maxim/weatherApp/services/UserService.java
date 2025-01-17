@@ -40,4 +40,8 @@ public class UserService {
             throw new IllegalArgumentException("Invalid login or password");
         }
     }
+
+    public String getUserLoginById(int userId) {
+        return userRepository.findById(userId).get().getLogin();
+    }
 }

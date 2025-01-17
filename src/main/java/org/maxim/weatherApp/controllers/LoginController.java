@@ -44,7 +44,7 @@ public class LoginController {
             UUID sessionId = sessionService.create(userId);
             Cookie cookie = CookieUtils.createCookieWithSessionId(sessionId);
             response.addCookie(cookie);
-            return "redirect:/";
+            return "redirect:/home";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "login";

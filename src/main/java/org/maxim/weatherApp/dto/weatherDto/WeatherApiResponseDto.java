@@ -2,14 +2,21 @@ package org.maxim.weatherApp.dto.weatherDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record WeatherApiResponseDto(
-        @JsonProperty("name") String cityName,
-        @JsonProperty("coord") Coord coord,
-        @JsonProperty("weather") List<Weather> weather,
-        @JsonProperty("main") Main main
-) {
+public class WeatherApiResponseDto {
+    @JsonProperty("name") String name;
+    @JsonProperty("coord") Coord coord;
+    @JsonProperty("weather") List<Weather> weather;
+    @JsonProperty("main") Main main;
 }

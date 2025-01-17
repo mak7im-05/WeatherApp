@@ -7,6 +7,7 @@ import org.maxim.weatherApp.dto.weatherDto.Main;
 import org.maxim.weatherApp.dto.weatherDto.Weather;
 import org.maxim.weatherApp.dto.weatherDto.WeatherApiResponseDto;
 import org.maxim.weatherApp.entities.Location;
+import org.maxim.weatherApp.mapper.LocationMapper;
 import org.maxim.weatherApp.repositories.LocationRepository;
 import org.maxim.weatherApp.services.LocationService;
 import org.mockito.Mockito;
@@ -24,6 +25,7 @@ class OpenWeatherIntegrationTest {
 
     private OpenWeatherApiClient openWeatherApiClientMock;
     private LocationRepository locationRepositoryMock;
+    private LocationMapper locationMapperMock;
 
     private LocationService locationService;
 
@@ -31,7 +33,8 @@ class OpenWeatherIntegrationTest {
     void setUp() {
         openWeatherApiClientMock = Mockito.mock(OpenWeatherApiClient.class);
         locationRepositoryMock = Mockito.mock(LocationRepository.class);
-        locationService = new LocationService(locationRepositoryMock, openWeatherApiClientMock);
+        locationMapperMock = Mockito.mock(LocationMapper.class);
+        locationService = new LocationService(locationRepositoryMock, openWeatherApiClientMock, locationMapperMock);
     }
 
     @Test
@@ -54,8 +57,8 @@ class OpenWeatherIntegrationTest {
 
         Assert.notNull(actualAnswer, "actual answer is null");
         assertEquals(expectedAnswer.size(), actualAnswer.size());
-        assertEquals(expectedAnswer.getFirst().cityName(), actualAnswer.getFirst().cityName());
-        assertEquals(expectedAnswer.getFirst().weather().getFirst().description(), actualAnswer.getFirst().weather().getFirst().description());
+        assertEquals(expectedAnswer.getFirst().getName(), actualAnswer.getFirst().getName());
+        assertEquals(expectedAnswer.getFirst().getWeather().getFirst().description(), actualAnswer.getFirst().getWeather().getFirst().description());
     }
 
     @Test
