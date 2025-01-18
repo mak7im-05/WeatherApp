@@ -1,5 +1,6 @@
 package org.maxim.weatherApp.config;
 
+import org.flywaydb.core.Flyway;
 import org.maxim.weatherApp.interceptor.AuthenticationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.*;
@@ -29,6 +31,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories("org.maxim.weatherApp.repositories")
 @EnableWebMvc
+@EnableScheduling
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
@@ -49,6 +52,7 @@ public class SpringConfig implements WebMvcConfigurer {
         templateResolver.setPrefix("WEB-INF/views/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
+
         return templateResolver;
     }
 
@@ -125,6 +129,19 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController( "/", "/home");
+        registry.addRedirectViewController("/", "/home");
+    }
+
+    @Bean
+    public Flyway flyway() {
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource())
+                .locations("classpath:db/migration")
+                .baselineOnMigrate(true)
+                .load();
+
+        flyway.migrate();
+
+        return flyway;
     }
 }

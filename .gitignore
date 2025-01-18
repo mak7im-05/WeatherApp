@@ -39,4 +39,4 @@ build/
 ### Mac OS ###
 .DS_Store
 
-.src/resources/aplication.properties
+aplication.properties

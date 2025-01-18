@@ -3,6 +3,7 @@ package org.maxim.weatherApp.services;
 import org.maxim.weatherApp.entities.Session;
 import org.maxim.weatherApp.repositories.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,24 +13,24 @@ import java.util.UUID;
 @Service
 public class SessionService {
 
-    private final SessionRepository ISessionRepository;
+    private final SessionRepository sessionRepository;
 
     @Autowired
-    public SessionService(SessionRepository ISessionRepository) {
-        this.ISessionRepository = ISessionRepository;
+    public SessionService(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
     }
 
     public UUID create(int userId) {
         UUID sessionUuid = UUID.randomUUID();
         Session newSession = new Session(sessionUuid, userId, LocalDateTime.now().plusSeconds(60 * 60 * 24));
 
-        ISessionRepository.save(newSession);
+        sessionRepository.save(newSession);
         return sessionUuid;
     }
 
     public boolean isSessionActive(String sessionId) {
         UUID sessionUuid = UUID.fromString(sessionId);
-        Optional<Session> session = ISessionRepository.findById(sessionUuid);
+        Optional<Session> session = sessionRepository.findById(sessionUuid);
         if (session.isEmpty()) return false;
 
         return checkSessionTime(session);
@@ -42,11 +43,17 @@ public class SessionService {
 
     public void deleteSessionById(String sessionId) {
         UUID sessionUuid = UUID.fromString(sessionId);
-        ISessionRepository.deleteById(sessionUuid);
+        sessionRepository.deleteById(sessionUuid);
     }
 
     public int getUserIdBySessionId(String sessionId) {
         UUID sessionUuid = UUID.fromString(sessionId);
-        return ISessionRepository.findById(sessionUuid).get().getUserId();
+        return sessionRepository.findById(sessionUuid).get().getUserId();
+    }
+
+    @Scheduled(fixedRate = 60 * 60 * 100)
+    public void clearExpiredSessions() {
+        sessionRepository.deleteExpiredSessions();
+        System.out.println("CLEAR");
     }
 }

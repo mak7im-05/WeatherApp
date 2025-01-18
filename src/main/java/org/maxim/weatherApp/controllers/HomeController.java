@@ -1,6 +1,7 @@
 package org.maxim.weatherApp.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.flywaydb.core.Flyway;
 import org.maxim.weatherApp.dto.weatherDto.WeatherApiResponseDto;
 import org.maxim.weatherApp.services.LocationService;
 import org.maxim.weatherApp.services.SessionService;
@@ -34,6 +35,7 @@ public class HomeController {
 
         List<WeatherApiResponseDto> locations1 = locationService.findLocationsByUserId(Integer.parseInt(userId));
         model.addAttribute("locations", locations1);
+
         return "home";
     }
 
