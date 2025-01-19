@@ -58,8 +58,8 @@ public class OpenWeatherApiClient {
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),
                         response -> response.bodyToMono(String.class).flatMap(errorBody -> {
-                            System.err.println("Ошибка: " + errorBody);
-                            return Mono.error(new RuntimeException("Ошибка: " + response.statusCode()));
+                            System.err.println("error: " + errorBody);
+                            return Mono.error(new RuntimeException("error: " + response.statusCode()));
                         })
                 )
                 .bodyToMono(new ParameterizedTypeReference<List<LocationDto>>() {

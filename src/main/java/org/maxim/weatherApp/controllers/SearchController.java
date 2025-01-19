@@ -33,6 +33,11 @@ public class SearchController {
         String login = userService.getUserLoginById(Integer.parseInt(userId));
         model.addAttribute("login", login);
 
+        if (locationName.trim().isEmpty()) {
+            model.addAttribute("error", "Please enter a valid location name");
+            return "weather-search";
+        }
+
         List<LocationDto> locations = locationService.findLocationsByCityName(locationName);
         model.addAttribute("locations", locations);
         return "weather-search";
@@ -43,8 +48,8 @@ public class SearchController {
                                 @RequestParam(name = "longitude") BigDecimal lon,
                                 @RequestParam(name = "locationName") String locationName,
                                 @RequestAttribute(name = "userId") String userId, Model model) {
-
         LocationDto locationDto = new LocationDto(locationName, lat, lon);
+
         try {
             locationService.addWeather(locationDto, Integer.parseInt(userId));
         } catch (IllegalArgumentException e) {

@@ -17,6 +17,10 @@
             <p th:text="${error}"></p>
         </div>
 
+        <div th:if="${successMessage}" class="alert alert-success">
+            <p th:text="${successMessage}"></p>
+        </div>
+
         <div class="mb-3">
             <label for="login" class="form-label">Login</label>
             <input type="text" class="form-control" id="login" placeholder="Enter login" th:field="*{login}" required>

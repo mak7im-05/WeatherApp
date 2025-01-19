@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherApiResponseDto {
+    Integer locationId;
     @JsonProperty("name") String name;
     @JsonProperty("coord") Coord coord;
     @JsonProperty("weather") List<Weather> weather;

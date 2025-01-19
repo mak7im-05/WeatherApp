@@ -31,14 +31,18 @@
         </div>
     </form>
 
+    <div class="mb-3 error-message" th:if="${error}" >
+        <p th:text="${error}"></p>
+    </div>
+
     <!-- Added locations list -->
     <h2>Добавленные локации</h2>
     <div class="row" th:id="${locations.size() > 0}">
         <div class="col-md-3 mb-4" th:each="location : ${locations}">
             <div class="card">
                 <form th:action="@{/home}" th:method="POST" class="btn-delete">
-                    <input type="hidden" name="lat" th:value="${location.coord.lat()}" />
-                    <input type="hidden" name="lon" th:value="${location.coord.lon()}" />
+                    <input type="hidden" name="userId" th:value="${userId}">
+                    <input type="hidden" name="locationId" th:value="${location.locationId}" />
                     <input type="submit" name="upvote" value="&times;"/>
                 </form>
                 <div class="card-body">

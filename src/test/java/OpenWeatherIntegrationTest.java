@@ -25,7 +25,6 @@ class OpenWeatherIntegrationTest {
 
     private OpenWeatherApiClient openWeatherApiClientMock;
     private LocationRepository locationRepositoryMock;
-    private LocationMapper locationMapperMock;
 
     private LocationService locationService;
 
@@ -33,16 +32,17 @@ class OpenWeatherIntegrationTest {
     void setUp() {
         openWeatherApiClientMock = Mockito.mock(OpenWeatherApiClient.class);
         locationRepositoryMock = Mockito.mock(LocationRepository.class);
-        locationMapperMock = Mockito.mock(LocationMapper.class);
+        LocationMapper locationMapperMock = Mockito.mock(LocationMapper.class);
         locationService = new LocationService(locationRepositoryMock, openWeatherApiClientMock, locationMapperMock);
     }
 
     @Test
-    void GetWeatherByCoordinates_Success() {
+    void GetWeatherByCoordinates_ShouldReturnCorrectData() {
         List<Location> locationList = List.of(
                 new Location(1, "London", 1, BigDecimal.valueOf(1), BigDecimal.valueOf(1))
         );
         WeatherApiResponseDto weatherResponseDto = new WeatherApiResponseDto(
+                1,
                 "London",
                 new Coord(BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
                 List.of(new Weather("Clouds")),
@@ -62,7 +62,7 @@ class OpenWeatherIntegrationTest {
     }
 
     @Test
-    void getWeatherByLocation_Success() {
+    void getWeatherByLocation_ShouldReturnCorrectData() {
         LocationDto locationResponseDto = new LocationDto(
                 "London",
                 BigDecimal.valueOf(1),
@@ -81,12 +81,6 @@ class OpenWeatherIntegrationTest {
 
     @Test
     void getWeatherByEmptyLocation_ShouldThrowException() {
-        LocationDto locationResponseDto = new LocationDto(
-                "London",
-                BigDecimal.valueOf(1),
-                BigDecimal.valueOf(1)
-        );
-
         Mockito.doThrow(new RuntimeException("Ошибка: некорректный запрос")).when(openWeatherApiClientMock).getWeatherByLocation("");
         assertThrows(
                 Exception.class,

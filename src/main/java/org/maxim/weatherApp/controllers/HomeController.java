@@ -1,7 +1,6 @@
 package org.maxim.weatherApp.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.flywaydb.core.Flyway;
 import org.maxim.weatherApp.dto.weatherDto.WeatherApiResponseDto;
 import org.maxim.weatherApp.services.LocationService;
 import org.maxim.weatherApp.services.SessionService;
@@ -9,7 +8,10 @@ import org.maxim.weatherApp.services.UserService;
 import org.maxim.weatherApp.utils.CookieUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,8 +35,9 @@ public class HomeController {
         String login = userService.getUserLoginById(Integer.parseInt(userId));
         model.addAttribute("login", login);
 
-        List<WeatherApiResponseDto> locations1 = locationService.findLocationsByUserId(Integer.parseInt(userId));
-        model.addAttribute("locations", locations1);
+        List<WeatherApiResponseDto> locations = locationService.findLocationsByUserId(Integer.parseInt(userId));
+        model.addAttribute("locations", locations);
+        model.addAttribute("userId", userId);
 
         return "home";
     }
@@ -47,9 +50,9 @@ public class HomeController {
     }
 
     @PostMapping("/home")
-    public String deleteWeatherCard(@RequestParam(name = "lat") BigDecimal lat,
-                                    @RequestParam(name = "lon") BigDecimal lon) {
-        locationService.deleteWeather(lat, lon);
+    public String deleteWeatherCard(@RequestParam(name = "locationId") int locationId,
+                                    @RequestParam(name = "userId") int userId) {
+        locationService.deleteWeather(locationId, userId);
         return "redirect:/home";
     }
 }

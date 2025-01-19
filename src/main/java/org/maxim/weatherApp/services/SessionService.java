@@ -1,8 +1,8 @@
 package org.maxim.weatherApp.services;
 
+import lombok.RequiredArgsConstructor;
 import org.maxim.weatherApp.entities.Session;
 import org.maxim.weatherApp.repositories.SessionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +11,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class SessionService {
 
     private final SessionRepository sessionRepository;
-
-    @Autowired
-    public SessionService(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
-    }
 
     public UUID create(int userId) {
         UUID sessionUuid = UUID.randomUUID();
@@ -54,6 +50,5 @@ public class SessionService {
     @Scheduled(fixedRate = 60 * 60 * 100)
     public void clearExpiredSessions() {
         sessionRepository.deleteExpiredSessions();
-        System.out.println("CLEAR");
     }
 }

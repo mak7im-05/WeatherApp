@@ -2,5 +2,5 @@ GET https://api.openweathermap.org/data/2.5/weather?lat=-0.13&lon=51.512&appid=f
 Accept: application/json
 
 ###
-GET http://api.openweathermap.org/geo/1.0/direct?q=London&limit=5&appid=fcaba8fd655f67eb30b62940d5658bc4
+GET http://api.openweathermap.org/geo/1.0/direct?q=Gomel&limit=5&appid=fcaba8fd655f67eb30b62940d5658bc4
 Accept: application/json
