@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.maxim.weatherApp.clients.OpenWeatherApiClient;
-import org.maxim.weatherApp.dto.LocationDto;
-import org.maxim.weatherApp.dto.weatherDto.Coord;
-import org.maxim.weatherApp.dto.weatherDto.Main;
-import org.maxim.weatherApp.dto.weatherDto.Weather;
-import org.maxim.weatherApp.dto.weatherDto.WeatherApiResponseDto;
+import org.maxim.weatherApp.dto.request.LocationRequestDto;
+import org.maxim.weatherApp.dto.response.weatherDto.Coord;
+import org.maxim.weatherApp.dto.response.weatherDto.Main;
+import org.maxim.weatherApp.dto.response.weatherDto.Weather;
+import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
 import org.maxim.weatherApp.entities.Location;
 import org.maxim.weatherApp.mapper.LocationMapper;
 import org.maxim.weatherApp.repositories.LocationRepository;
@@ -63,16 +63,16 @@ class OpenWeatherIntegrationTest {
 
     @Test
     void getWeatherByLocation_ShouldReturnCorrectData() {
-        LocationDto locationResponseDto = new LocationDto(
+        LocationRequestDto locationResponseDto = new LocationRequestDto(
                 "London",
                 BigDecimal.valueOf(1),
                 BigDecimal.valueOf(1)
         );
-        List<LocationDto> expectedAnswer = List.of(locationResponseDto);
+        List<LocationRequestDto> expectedAnswer = List.of(locationResponseDto);
 
         Mockito.doReturn(expectedAnswer).when(openWeatherApiClientMock).getWeatherByLocation(Mockito.anyString());
 
-        List<LocationDto> actualAnswer = locationService.findLocationsByCityName("London");
+        List<LocationRequestDto> actualAnswer = locationService.findLocationsByCityName("London");
 
         Assert.notNull(actualAnswer, "actual answer is null");
         assertEquals(expectedAnswer.size(), actualAnswer.size());

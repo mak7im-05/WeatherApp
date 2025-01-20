@@ -9,7 +9,6 @@
 </head>
 <body>
 <div class="container mt-4">
-    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <a th:href="@{/}" class="logo">
             <img th:src="@{/resources/images/CloudAndSun.png}" alt="Logo" class="logo-img" style="height: 40px;">
@@ -24,14 +23,15 @@
     </div>
     <form th:action="@{/weather-search}" th:method="GET" class="mb-4">
         <div class="input-group">
-            <input type="text" name="locationName" class="form-control" placeholder="Поиск локации..." required>
+            <input type="hidden" th:value="${login}">
+            <input type="text" name="locationName" class="form-control" placeholder="search locations..." required>
             <button type="submit" class="btn btn-primary">Найти</button>
         </div>
     </form>
     <div class="mb-3 error-message" th:if="${error}">
         <p th:text="${error}"></p>
     </div>
-    <h2 th:unless="${error}">Найденные локации</h2>
+    <h2 th:unless="${error}">found locations</h2>
     <div th:if="${locations.size() == 0}">
         <h3>Nothing was found</h3>
     </div>
@@ -41,11 +41,11 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="${location.name()}"></h5>
                     <p class="card-text"
-                       th:text="'Координаты: (' + ${location.latitude()} + ' , ' + ${location.longitude()} + ')'"></p>
+                       th:text="'coordinates: (' + ${location.latitude()} + ' , ' + ${location.longitude()} + ')'"></p>
                     <div class="cart-foot">
-                        <form th:action="@{/add(latitude=${location.latitude()}, longitude=${location.longitude()}, locationName=${location.name()})}"
+                        <form th:action="@{/weather-search/add(latitude=${location.latitude()}, longitude=${location.longitude()}, locationName=${location.name()}, login=${login})}"
                               th:method="POST">
-                            <button class="btn btn-success btn-sm">Добавить</button>
+                            <button class="btn btn-success btn-sm">add</button>
                         </form>
                     </div>
                 </div>

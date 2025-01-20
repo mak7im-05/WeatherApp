@@ -2,8 +2,8 @@ package org.maxim.weatherApp.services;
 
 import lombok.RequiredArgsConstructor;
 import org.maxim.weatherApp.clients.OpenWeatherApiClient;
-import org.maxim.weatherApp.dto.LocationDto;
-import org.maxim.weatherApp.dto.weatherDto.WeatherApiResponseDto;
+import org.maxim.weatherApp.dto.request.LocationRequestDto;
+import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
 import org.maxim.weatherApp.entities.Location;
 import org.maxim.weatherApp.mapper.LocationMapper;
 import org.maxim.weatherApp.repositories.LocationRepository;
@@ -31,11 +31,11 @@ public class LocationService {
     }
 
     @Transactional
-    public void addWeather(LocationDto location, int userId) {
+    public void addWeather(LocationRequestDto location, int userId) {
         BigDecimal lon = location.longitude().setScale(2, RoundingMode.HALF_UP);
         BigDecimal lat = location.latitude().setScale(2, RoundingMode.HALF_UP);
         Optional<Location> existLocation = locationRepository.findByLatitudeAndLongitude(lat, lon);
-        if(existLocation.isPresent() && existLocation.get().getUserId() == userId) {
+        if (existLocation.isPresent() && existLocation.get().getUserId() == userId) {
             throw new IllegalArgumentException("The location already exists");
         }
 
@@ -52,11 +52,11 @@ public class LocationService {
                 locationRepository.deleteById(locationId);
                 return;
             }
-            throw new IllegalArgumentException("The location does not exist");
+            throw new IllegalArgumentException("A user can't delete someone else's weather");
         }
     }
 
-    public List<LocationDto> findLocationsByCityName(String cityName) {
+    public List<LocationRequestDto> findLocationsByCityName(String cityName) {
         return openWeatherApiService.getWeatherByLocation(cityName);
     }
 

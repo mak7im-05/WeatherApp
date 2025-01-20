@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+
+import java.util.UUID;
 
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -28,23 +29,20 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (!sessionService.isSessionActive(sessionId)) {
-            sessionService.deleteSessionById(sessionId);
+        try {
+            UUID sessionUuid = UUID.fromString(sessionId);
+            if (!sessionService.isSessionActive(sessionUuid)) {
+                sessionService.deleteSessionById(sessionUuid);
+                response.sendRedirect(request.getContextPath() + "/login");
+                return false;
+            }
+            int userId = sessionService.getUserIdBySessionId(sessionUuid);
+            request.setAttribute("userId", userId);
+            return true;
+
+        } catch (IllegalArgumentException e) {
             response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
-        int userId = sessionService.getUserIdBySessionId(sessionId);
-        request.setAttribute("userId", userId);
-        return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }

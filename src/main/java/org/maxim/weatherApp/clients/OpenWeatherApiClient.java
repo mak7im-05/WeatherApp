@@ -1,7 +1,7 @@
 package org.maxim.weatherApp.clients;
 
-import org.maxim.weatherApp.dto.LocationDto;
-import org.maxim.weatherApp.dto.weatherDto.WeatherApiResponseDto;
+import org.maxim.weatherApp.dto.request.LocationRequestDto;
+import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -46,7 +46,7 @@ public class OpenWeatherApiClient {
         }
     }
 
-    public List<LocationDto> getWeatherByLocation(String location) {
+    public List<LocationRequestDto> getWeatherByLocation(String location) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("geo/1.0/direct")
@@ -62,7 +62,7 @@ public class OpenWeatherApiClient {
                             return Mono.error(new RuntimeException("error: " + response.statusCode()));
                         })
                 )
-                .bodyToMono(new ParameterizedTypeReference<List<LocationDto>>() {
+                .bodyToMono(new ParameterizedTypeReference<List<LocationRequestDto>>() {
                 })
                 .block();
     }

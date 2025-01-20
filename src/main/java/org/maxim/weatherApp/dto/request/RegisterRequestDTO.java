@@ -1,4 +1,4 @@
-package org.maxim.weatherApp.dto;
+package org.maxim.weatherApp.dto.request;
 
 import jakarta.validation.constraints.*;
 

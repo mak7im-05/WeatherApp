@@ -2,7 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.maxim.weatherApp.config.SpringConfig;
-import org.maxim.weatherApp.dto.UserServiceDTO;
+import org.maxim.weatherApp.dto.request.UserServiceRequestDTO;
 import org.maxim.weatherApp.entities.Session;
 import org.maxim.weatherApp.entities.User;
 import org.maxim.weatherApp.repositories.SessionRepository;
@@ -44,7 +44,7 @@ public class UserAndSessionServiceIntegrationTest {
 
     @Test
     void UserRegistrationShouldAddNewUserInDatabase() {
-        UserServiceDTO user = new UserServiceDTO("login@gmail.com", "password");
+        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
 
         userService.registerUser(user);
 
@@ -56,7 +56,7 @@ public class UserAndSessionServiceIntegrationTest {
 
     @Test
     void RegistrationWithDuplicateUsernameShouldThrowException() {
-        UserServiceDTO user = new UserServiceDTO("login@gmail.com", "password");
+        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
 
         userService.registerUser(user);
 
@@ -69,7 +69,7 @@ public class UserAndSessionServiceIntegrationTest {
 
     @Test
     void shouldExpireSessionAfterTimeout() {
-        UserServiceDTO user = new UserServiceDTO("login@gmail.com", "password");
+        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
         userService.registerUser(user);
         int userId = userService.authenticateUser(user);
 
@@ -78,13 +78,13 @@ public class UserAndSessionServiceIntegrationTest {
         session.ifPresent(a -> a.setExpiresAt(LocalDateTime.now().minusSeconds(60 * 60 * 24)));
         session.ifPresent(a -> ISessionRepository.save(a));
 
-        boolean sessionActive = sessionService.isSessionActive(sessionUuid.toString());
+        boolean sessionActive = sessionService.isSessionActive(sessionUuid);
         assertFalse(sessionActive);
     }
 
     @Test
     void shouldReturnUserIdOnSuccessfulLogin() {
-        UserServiceDTO user = new UserServiceDTO("login@gmail.com", "password");
+        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
 
         userService.registerUser(user);
 

@@ -12,7 +12,5 @@ import java.util.Optional;
 public interface LocationRepository extends JpaRepository<Location, Integer> {
     List<Location> findAllByUserId(int userId);
 
-    void deleteByLatitudeAndLongitude(BigDecimal latitude, BigDecimal longitude);
-
     Optional<Location> findByLatitudeAndLongitude(BigDecimal latitude, BigDecimal longitude);
 }

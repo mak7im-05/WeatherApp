@@ -1,10 +1,10 @@
-package org.maxim.weatherApp.dto;
+package org.maxim.weatherApp.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public record UserServiceDTO (
+public record UserServiceRequestDTO(
         @NotEmpty(message = "login should not be empty")
         @Email(message = "email should be valid")
         String login,

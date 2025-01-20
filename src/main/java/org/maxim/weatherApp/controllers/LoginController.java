@@ -3,39 +3,36 @@ package org.maxim.weatherApp.controllers;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.maxim.weatherApp.dto.UserServiceDTO;
+import lombok.RequiredArgsConstructor;
+import org.maxim.weatherApp.dto.request.UserServiceRequestDTO;
 import org.maxim.weatherApp.services.SessionService;
 import org.maxim.weatherApp.services.UserService;
 import org.maxim.weatherApp.utils.CookieUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
 @Controller
+@RequiredArgsConstructor
+@RequestMapping("/login")
 public class LoginController {
 
     private final SessionService sessionService;
     private final UserService userService;
 
-    @Autowired
-    public LoginController(SessionService sessionService, UserService userService) {
-        this.sessionService = sessionService;
-        this.userService = userService;
-    }
-
-    @GetMapping("/login")
-    public String showLoginPage(@ModelAttribute("user") UserServiceDTO user) {
+    @GetMapping
+    public String showLoginPage(@ModelAttribute("user") UserServiceRequestDTO user) {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String handleLogin(@ModelAttribute("user") @Valid UserServiceDTO user,
+    @PostMapping
+    public String handleLogin(@ModelAttribute("user") @Valid UserServiceRequestDTO user,
                               BindingResult bindingResult,
                               Model model, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {

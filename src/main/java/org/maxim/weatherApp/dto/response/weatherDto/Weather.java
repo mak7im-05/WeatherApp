@@ -1,4 +1,4 @@
-package org.maxim.weatherApp.dto.weatherDto;
+package org.maxim.weatherApp.dto.response.weatherDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
