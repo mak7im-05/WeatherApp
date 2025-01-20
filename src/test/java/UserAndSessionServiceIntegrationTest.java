@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//-ea -Dspring.profiles.active=h2 эту строку нужно вставить в настройки конфигурации
 @Transactional
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SpringConfig.class)
