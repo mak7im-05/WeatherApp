@@ -1,4 +1,4 @@
-package org.maxim.weatherApp.utils;
+package org.maxim.weatherApp.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,7 @@ import java.util.UUID;
 public class CookieUtils {
     public String findCookieByName(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
+        if (cookies == null) return "";
         String sessionId = "";
         for (Cookie c : cookies) {
             if (c.getName().equals(name)) {

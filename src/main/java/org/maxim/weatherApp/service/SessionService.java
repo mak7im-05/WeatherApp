@@ -1,20 +1,17 @@
-package org.maxim.weatherApp.services;
+package org.maxim.weatherApp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.maxim.weatherApp.entities.Session;
-import org.maxim.weatherApp.repositories.SessionRepository;
-import org.springframework.cglib.core.Local;
+import org.maxim.weatherApp.entity.Session;
+import org.maxim.weatherApp.repository.SessionRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class SessionService {
 
     private final SessionRepository sessionRepository;
@@ -27,15 +24,11 @@ public class SessionService {
         return sessionUuid;
     }
 
+    @Transactional(readOnly = true)
     public boolean isSessionActive(UUID sessionUuid) {
-        Optional<Session> session = sessionRepository.findById(sessionUuid);
-        if (session.isEmpty()) return false;
-
-        return checkSessionTime(session);
-    }
-
-    private boolean checkSessionTime(Optional<Session> session) {
-        return session.get().getExpiresAt().isAfter(LocalDateTime.now());
+        return sessionRepository.findById(sessionUuid).filter(
+                session -> session.getExpiresAt().isAfter(LocalDateTime.now())
+        ).isPresent();
     }
 
     @Transactional
@@ -43,8 +36,11 @@ public class SessionService {
         sessionRepository.deleteById(sessionUuid);
     }
 
+    @Transactional(readOnly = true)
     public int getUserIdBySessionId(UUID sessionUuid) {
-        return sessionRepository.findById(sessionUuid).get().getUserId();
+        return sessionRepository.findById(sessionUuid)
+                .orElseThrow(() -> new IllegalStateException("Session not found"))
+                .getUserId();
     }
 
     @Transactional

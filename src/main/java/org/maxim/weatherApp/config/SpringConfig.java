@@ -17,6 +17,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
@@ -29,7 +30,7 @@ import java.util.Properties;
 @ComponentScan("org.maxim.weatherApp")
 @PropertySource("classpath:${spring.profiles.active}.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories("org.maxim.weatherApp.repositories")
+@EnableJpaRepositories("org.maxim.weatherApp.repository")
 @EnableWebMvc
 @EnableScheduling
 public class SpringConfig implements WebMvcConfigurer {
@@ -98,7 +99,7 @@ public class SpringConfig implements WebMvcConfigurer {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("org.maxim.weatherApp.entities");
+        em.setPackagesToScan("org.maxim.weatherApp.entity");
 
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -143,5 +144,10 @@ public class SpringConfig implements WebMvcConfigurer {
         flyway.migrate();
 
         return flyway;
+    }
+
+    @Bean
+    public WebClient apiWebClient() {
+        return WebClient.create("https://api.openweathermap.org/");
     }
 }

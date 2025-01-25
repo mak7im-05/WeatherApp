@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public record UserServiceRequestDTO(
+public record UserServiceRequestDto(
         @NotEmpty(message = "login should not be empty")
         @Email(message = "email should be valid")
         String login,

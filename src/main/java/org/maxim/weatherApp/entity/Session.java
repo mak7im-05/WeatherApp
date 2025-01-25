@@ -1,4 +1,4 @@
-package org.maxim.weatherApp.entities;
+package org.maxim.weatherApp.entity;
 
 
 import jakarta.persistence.Column;

@@ -1,6 +1,6 @@
-package org.maxim.weatherApp.repositories;
+package org.maxim.weatherApp.repository;
 
-import org.maxim.weatherApp.entities.Location;
+import org.maxim.weatherApp.entity.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

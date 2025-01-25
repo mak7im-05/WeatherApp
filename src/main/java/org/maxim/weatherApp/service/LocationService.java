@@ -1,23 +1,22 @@
-package org.maxim.weatherApp.services;
+package org.maxim.weatherApp.service;
 
 import lombok.RequiredArgsConstructor;
-import org.maxim.weatherApp.clients.OpenWeatherApiClient;
+import org.maxim.weatherApp.client.OpenWeatherApiClient;
 import org.maxim.weatherApp.dto.request.LocationRequestDto;
 import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
-import org.maxim.weatherApp.entities.Location;
+import org.maxim.weatherApp.entity.Location;
 import org.maxim.weatherApp.mapper.LocationMapper;
-import org.maxim.weatherApp.repositories.LocationRepository;
+import org.maxim.weatherApp.repository.LocationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LocationService {
 
@@ -25,9 +24,9 @@ public class LocationService {
     private final OpenWeatherApiClient openWeatherApiService;
     private final LocationMapper locationMapper;
 
-    public List<WeatherApiResponseDto> findLocationsByUserId(int userId) {
-        List<Location> locations = locationRepository.findAllByUserId(userId);
-        return getWeatherApiResponseDtoList(locations);
+    @Transactional(readOnly = true)
+    public List<Location> findLocationsByUserId(int userId) {
+        return locationRepository.findAllByUserId(userId);
     }
 
     @Transactional
@@ -56,18 +55,20 @@ public class LocationService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<LocationRequestDto> findLocationsByCityName(String cityName) {
         return openWeatherApiService.getWeatherByLocation(cityName);
     }
 
-    private List<WeatherApiResponseDto> getWeatherApiResponseDtoList(List<Location> locations) {
-        List<WeatherApiResponseDto> weathers = new ArrayList<>();
-        for (Location location : locations) {
-            WeatherApiResponseDto weather = openWeatherApiService.getWeatherByCoordinates(location.getLatitude(), location.getLongitude());
-            weather.setName(location.getName());
-            weather.setLocationId(location.getId());
-            weathers.add(weather);
-        }
-        return weathers;
+    @Transactional(readOnly = true)
+    public List<WeatherApiResponseDto> getWeatherApiResponseDtoList(List<Location> locations) {
+        return locations.stream()
+                .map(location -> {
+                    WeatherApiResponseDto weather = openWeatherApiService.getWeatherByCoordinates(location.getLatitude(), location.getLongitude());
+                    weather.setName(location.getName());
+                    weather.setLocationId(location.getId());
+                    return weather;
+                })
+                .collect(Collectors.toList());
     }
 }

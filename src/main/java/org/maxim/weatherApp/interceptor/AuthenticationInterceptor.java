@@ -2,8 +2,8 @@ package org.maxim.weatherApp.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.maxim.weatherApp.services.SessionService;
-import org.maxim.weatherApp.utils.CookieUtils;
+import org.maxim.weatherApp.service.SessionService;
+import org.maxim.weatherApp.util.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;

@@ -1,11 +1,11 @@
-package org.maxim.weatherApp.controllers;
+package org.maxim.weatherApp.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.maxim.weatherApp.dto.request.RegisterRequestDTO;
-import org.maxim.weatherApp.dto.request.UserServiceRequestDTO;
+import org.maxim.weatherApp.entity.User;
 import org.maxim.weatherApp.mapper.UserRegistrationMapper;
-import org.maxim.weatherApp.services.UserService;
+import org.maxim.weatherApp.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,21 +29,21 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String processRegistration(@ModelAttribute("user") @Valid RegisterRequestDTO RegisterUser,
+    public String processRegistration(@ModelAttribute("user") @Valid RegisterRequestDTO registerUser,
                                       BindingResult bindingResult,
                                       Model model,
                                       RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-        if (!RegisterUser.password().equals(RegisterUser.confirmPassword())) {
+        if (!registerUser.password().equals(registerUser.confirmPassword())) {
             model.addAttribute("error", "Passwords do not match");
             return "registration";
         }
 
         try {
-            UserServiceRequestDTO userServiceDto = userRegistrationMapper.mapTo(RegisterUser);
-            userService.registerUser(userServiceDto);
+            User user = userRegistrationMapper.toServiceDto(registerUser);
+            userService.registerUser(user);
             redirectAttributes.addFlashAttribute("successMessage", "Registration successful! Please log in.");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {

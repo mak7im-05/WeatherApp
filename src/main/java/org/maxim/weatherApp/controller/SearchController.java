@@ -1,9 +1,8 @@
-package org.maxim.weatherApp.controllers;
+package org.maxim.weatherApp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.maxim.weatherApp.dto.request.LocationRequestDto;
-import org.maxim.weatherApp.services.LocationService;
-import org.maxim.weatherApp.services.UserService;
+import org.maxim.weatherApp.service.LocationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +16,10 @@ import java.util.List;
 public class SearchController {
 
     private final LocationService locationService;
-    private final UserService userService;
 
     @GetMapping
-    public String showWeatherSearchPage(@RequestParam(name = "locationName") String locationName,
-                                        @RequestParam(name = "login") String login,
+    public String showLocationSearchPage(@RequestParam("locationName") String locationName,
+                                        @RequestParam("login") String login,
                                         @ModelAttribute("locationDto") LocationRequestDto locationDto,
                                         Model model) {
         if (locationName.trim().isEmpty()) {
@@ -38,11 +36,11 @@ public class SearchController {
     }
 
     @PostMapping("/add")
-    public String addNewWeather(@RequestParam(name = "latitude") BigDecimal lat,
-                                @RequestParam(name = "longitude") BigDecimal lon,
-                                @RequestParam(name = "locationName") String locationName,
-                                @RequestParam(name = "login") String login,
-                                @RequestAttribute(name = "userId") String userId, Model model) {
+    public String addNewLocation(@RequestParam("latitude") BigDecimal lat,
+                                @RequestParam("longitude") BigDecimal lon,
+                                @RequestParam("locationName") String locationName,
+                                @RequestParam("login") String login,
+                                @RequestAttribute("userId") String userId, Model model) {
         LocationRequestDto locationDto = new LocationRequestDto(locationName, lat, lon);
 
         try {

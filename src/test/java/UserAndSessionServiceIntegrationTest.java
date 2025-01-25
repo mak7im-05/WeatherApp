@@ -2,13 +2,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.maxim.weatherApp.config.SpringConfig;
-import org.maxim.weatherApp.dto.request.UserServiceRequestDTO;
-import org.maxim.weatherApp.entities.Session;
-import org.maxim.weatherApp.entities.User;
-import org.maxim.weatherApp.repositories.SessionRepository;
-import org.maxim.weatherApp.repositories.UserRepository;
-import org.maxim.weatherApp.services.SessionService;
-import org.maxim.weatherApp.services.UserService;
+import org.maxim.weatherApp.dto.request.UserServiceRequestDto;
+import org.maxim.weatherApp.entity.Session;
+import org.maxim.weatherApp.entity.User;
+import org.maxim.weatherApp.repository.SessionRepository;
+import org.maxim.weatherApp.repository.UserRepository;
+import org.maxim.weatherApp.service.SessionService;
+import org.maxim.weatherApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -45,33 +45,32 @@ public class UserAndSessionServiceIntegrationTest {
 
     @Test
     void UserRegistrationShouldAddNewUserInDatabase() {
-        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
-
+        User user = new User(1, "login@gmail.com", "password");
         userService.registerUser(user);
 
         Optional<User> savedUser = userRepository.findByLogin("login@gmail.com");
         System.out.println(savedUser);
         assertTrue(savedUser.isPresent());
-        assertEquals(user.login(), savedUser.get().getLogin());
+        assertEquals(user.getLogin(), savedUser.get().getLogin());
     }
 
     @Test
     void RegistrationWithDuplicateUsernameShouldThrowException() {
-        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
-
+        User user = new User(1, "login@gmail.com", "password");
         userService.registerUser(user);
 
         Optional<User> savedUser = userRepository.findByLogin("login@gmail.com");
         System.out.println(savedUser);
         assertTrue(savedUser.isPresent());
-        assertEquals(user.login(), savedUser.get().getLogin());
+        assertEquals(user.getLogin(), savedUser.get().getLogin());
         assertThrows(IllegalArgumentException.class, () -> userService.registerUser(user));
     }
 
     @Test
     void shouldExpireSessionAfterTimeout() {
-        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
-        userService.registerUser(user);
+        UserServiceRequestDto user = new UserServiceRequestDto("login@gmail.com", "password");
+        User registerUser = new User(1, "login@gmail.com", "password");
+        userService.registerUser(registerUser);
         int userId = userService.authenticateUser(user);
 
         UUID sessionUuid = sessionService.create(userId);
@@ -85,12 +84,14 @@ public class UserAndSessionServiceIntegrationTest {
 
     @Test
     void shouldReturnUserIdOnSuccessfulLogin() {
-        UserServiceRequestDTO user = new UserServiceRequestDTO("login@gmail.com", "password");
-
-        userService.registerUser(user);
+        UserServiceRequestDto user = new UserServiceRequestDto("login@gmail.com", "password");
+        User registerUser = new User(1, "login@gmail.com", "password");
+        userService.registerUser(registerUser);
 
         int userId = userService.authenticateUser(user);
-        int userIdFromRepository = userRepository.findById(userId).get().getId();
+        int userIdFromRepository = userRepository.findById(userId)
+                        .map(User::getId)
+                        .orElseThrow(() -> new IllegalStateException("User not found"));
 
         assertEquals(userId, userIdFromRepository);
     }

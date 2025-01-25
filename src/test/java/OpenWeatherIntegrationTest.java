@@ -1,15 +1,15 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.maxim.weatherApp.clients.OpenWeatherApiClient;
+import org.maxim.weatherApp.client.OpenWeatherApiClient;
 import org.maxim.weatherApp.dto.request.LocationRequestDto;
 import org.maxim.weatherApp.dto.response.weatherDto.Coord;
 import org.maxim.weatherApp.dto.response.weatherDto.Main;
 import org.maxim.weatherApp.dto.response.weatherDto.Weather;
 import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
-import org.maxim.weatherApp.entities.Location;
+import org.maxim.weatherApp.entity.Location;
 import org.maxim.weatherApp.mapper.LocationMapper;
-import org.maxim.weatherApp.repositories.LocationRepository;
-import org.maxim.weatherApp.services.LocationService;
+import org.maxim.weatherApp.repository.LocationRepository;
+import org.maxim.weatherApp.service.LocationService;
 import org.mockito.Mockito;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -53,7 +53,8 @@ class OpenWeatherIntegrationTest {
         Mockito.doReturn(weatherResponseDto).when(openWeatherApiClientMock).getWeatherByCoordinates(BigDecimal.valueOf(1), BigDecimal.valueOf(1));
         Mockito.doReturn(locationList).when(locationRepositoryMock).findAllByUserId(Mockito.anyInt());
 
-        List<WeatherApiResponseDto> actualAnswer = locationService.findLocationsByUserId(1);
+        List<Location> locations = locationService.findLocationsByUserId(1);
+        List<WeatherApiResponseDto> actualAnswer = locationService.getWeatherApiResponseDtoList(locations);
 
         Assert.notNull(actualAnswer, "actual answer is null");
         assertEquals(expectedAnswer.size(), actualAnswer.size());

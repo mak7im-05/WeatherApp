@@ -1,6 +1,6 @@
-package org.maxim.weatherApp.repositories;
+package org.maxim.weatherApp.repository;
 
-import org.maxim.weatherApp.entities.Session;
+import org.maxim.weatherApp.entity.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

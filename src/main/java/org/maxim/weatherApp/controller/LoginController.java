@@ -1,13 +1,13 @@
-package org.maxim.weatherApp.controllers;
+package org.maxim.weatherApp.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.maxim.weatherApp.dto.request.UserServiceRequestDTO;
-import org.maxim.weatherApp.services.SessionService;
-import org.maxim.weatherApp.services.UserService;
-import org.maxim.weatherApp.utils.CookieUtils;
+import org.maxim.weatherApp.dto.request.UserServiceRequestDto;
+import org.maxim.weatherApp.service.SessionService;
+import org.maxim.weatherApp.service.UserService;
+import org.maxim.weatherApp.util.CookieUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,12 +27,12 @@ public class LoginController {
     private final UserService userService;
 
     @GetMapping
-    public String showLoginPage(@ModelAttribute("user") UserServiceRequestDTO user) {
+    public String showLoginPage(@ModelAttribute("user") UserServiceRequestDto user) {
         return "login";
     }
 
     @PostMapping
-    public String handleLogin(@ModelAttribute("user") @Valid UserServiceRequestDTO user,
+    public String handleLogin(@ModelAttribute("user") @Valid UserServiceRequestDto user,
                               BindingResult bindingResult,
                               Model model, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {

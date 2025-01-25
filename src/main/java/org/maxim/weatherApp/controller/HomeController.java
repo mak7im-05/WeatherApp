@@ -1,13 +1,14 @@
-package org.maxim.weatherApp.controllers;
+package org.maxim.weatherApp.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
-import org.maxim.weatherApp.services.LocationService;
-import org.maxim.weatherApp.services.SessionService;
-import org.maxim.weatherApp.services.UserService;
-import org.maxim.weatherApp.utils.CookieUtils;
+import org.maxim.weatherApp.entity.Location;
+import org.maxim.weatherApp.service.LocationService;
+import org.maxim.weatherApp.service.SessionService;
+import org.maxim.weatherApp.service.UserService;
+import org.maxim.weatherApp.util.CookieUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,13 @@ public class HomeController {
     private final UserService userService;
 
     @GetMapping
-    public String showHomePage(@RequestAttribute(name = "userId") String userId, Model model) {
+    public String showHomePage(@RequestAttribute("userId") String userId, Model model) {
         String login = userService.getUserLoginById(Integer.parseInt(userId));
-        List<WeatherApiResponseDto> locations = locationService.findLocationsByUserId(Integer.parseInt(userId));
+        List<Location> locations = locationService.findLocationsByUserId(Integer.parseInt(userId));
+        List<WeatherApiResponseDto> weathers = locationService.getWeatherApiResponseDtoList(locations);
 
         model.addAttribute("login", login);
-        model.addAttribute("locations", locations);
+        model.addAttribute("locations", weathers);
         model.addAttribute("userId", userId);
 
         return "home";
@@ -48,8 +50,8 @@ public class HomeController {
     }
 
     @PostMapping
-    public String deleteWeatherCard(@RequestParam(name = "locationId") int locationId,
-                                    @RequestParam(name = "userId") int userId) {
+    public String deleteWeatherCard(@RequestParam("locationId") int locationId,
+                                    @RequestParam("userId") int userId) {
         locationService.deleteWeather(locationId, userId);
         return "redirect:/home";
     }

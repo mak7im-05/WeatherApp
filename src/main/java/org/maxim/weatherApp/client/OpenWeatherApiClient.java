@@ -1,28 +1,26 @@
-package org.maxim.weatherApp.clients;
+package org.maxim.weatherApp.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.maxim.weatherApp.dto.request.LocationRequestDto;
 import org.maxim.weatherApp.dto.response.weatherDto.WeatherApiResponseDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Properties;
 
 @Service
+@Slf4j
 public class OpenWeatherApiClient {
 
     private static final String BASE_URL = "https://api.openweathermap.org/";
-    private static String apiKey;
     private final WebClient webClient;
 
-    static {
-        loadProperties();
-    }
+    @Value("${api.key}")
+    private static String apiKey;
 
     public OpenWeatherApiClient() {
         webClient = WebClient.create(BASE_URL);
@@ -32,17 +30,6 @@ public class OpenWeatherApiClient {
         this.webClient = webClient;
         if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalStateException("API key is not loaded. Please check your configuration.");
-        }
-    }
-
-    private static void loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = OpenWeatherApiClient.class.getResourceAsStream("/application.properties")) {
-            properties.load(input);
-            apiKey = properties.getProperty("api.key");
-        } catch (IOException e) {
-            System.err.println("Failed to load API key from configuration file: " + e.getMessage());
-            apiKey = null;
         }
     }
 
@@ -57,10 +44,7 @@ public class OpenWeatherApiClient {
                 .retrieve()
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),
-                        response -> response.bodyToMono(String.class).flatMap(errorBody -> {
-                            System.err.println("error: " + errorBody);
-                            return Mono.error(new RuntimeException("error: " + response.statusCode()));
-                        })
+                        response -> response.bodyToMono(String.class).flatMap(errorBody -> Mono.error(new RuntimeException("error: " + response.statusCode())))
                 )
                 .bodyToMono(new ParameterizedTypeReference<List<LocationRequestDto>>() {
                 })
@@ -79,10 +63,7 @@ public class OpenWeatherApiClient {
                 .retrieve()
                 .onStatus(
                         status -> status.is4xxClientError() || status.is5xxServerError(),
-                        response -> response.bodyToMono(String.class).flatMap(errorBody -> {
-                            System.err.println("Ошибка: " + errorBody);
-                            return Mono.error(new RuntimeException("Ошибка: " + response.statusCode()));
-                        })
+                        response -> response.bodyToMono(String.class).flatMap(errorBody -> Mono.error(new RuntimeException("Ошибка: " + response.statusCode())))
                 )
                 .bodyToMono(WeatherApiResponseDto.class)
                 .block();

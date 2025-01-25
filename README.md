@@ -31,19 +31,12 @@ hibernate.hbm2ddl.auto=update
 
 hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 hibernate.show_sql=true
-```
 
-- Там же создай еще один файл с названием application.properties
-- В него помести следующее:
-
-```angular2html
 api.key=apikey
 ```
-
 - Вместо apikey введи свой апи ключ
-
 2. **Настрой конфигурацию запуска через томкат версии 10>**
-
+3. **Там же в VM options добавь строку ```-ea -Dspring.profiles.active=postgres```**
 ##### Теперь ты можешь запустить приложение
 
 #### Для тестов:

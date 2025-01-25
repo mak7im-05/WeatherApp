@@ -1,4 +1,4 @@
-package org.maxim.weatherApp.utils;
+package org.maxim.weatherApp.util;
 
 import lombok.experimental.UtilityClass;
 import org.mindrot.jbcrypt.BCrypt;
